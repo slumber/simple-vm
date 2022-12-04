@@ -1,0 +1,36 @@
+[package]
+name = "vm"
+version = "0.8.0-rc.0"
+authors = [
+  "Kristoffer Ström <kristoffer@dusk.network>",
+  "zer0 <matteo@dusk.network>",
+  "Milosz Muszynski <milosz@dusk.network>",
+  "Eduardo Leegwater Simões <eduardo@dusk.network>",
+]
+edition = "2018"
+repository = "https://github.com/dusk-network/rusk-vm"
+description = "Rusk VM is the virtual machine running Dusk Network's Smart contracts"
+license = "MPL-2.0"
+
+[dependencies]
+wasmparser = "0.81"
+failure = "0.1"
+dusk-hamt = "0.11.0-rkyv"
+microkelvin = "0.16.0-rkyv"
+wasmer = "2.3"
+wasmer-vm = "2.3"
+wasmer-compiler-singlepass = "2.3"
+wasmer-engine-universal = "2.3"
+wasmer-middlewares = "2.3"
+wasmer-types = "2.3"
+thiserror = "1.0"
+tracing = "0.1"
+loupe = "0.1"
+primitives = { path = "../primitives" }
+# todo: other places in rusk-vm and in microkelvin use rkyv 0.7.29 - please revisit our strategy on rkyv patch versions
+rkyv = { version = "0.7", default-features = false, features = ["alloc"] }
+bytecheck = { version = "0.6", default-features = false }
+derive-new = "0.5"
+blake2b_simd = { version = "0.3", default-features = false }
+
+sha256 = "1"

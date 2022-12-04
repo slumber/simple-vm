@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "vm",
+    "primitives",
+    "bindgen-macro",
+    "example/compile",
+    "example/run",
+]

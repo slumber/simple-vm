@@ -1,0 +1,44 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+//
+// Copyright (c) DUSK NETWORK. All rights reserved.
+
+use crate::StoreContext;
+use microkelvin::{OffsetLen, StoreSerializer};
+use rkyv::ser::Serializer;
+use rkyv::{Archive, Deserialize, Serialize};
+
+pub fn get_state_arg<S, P>(
+    written_state: u32,
+    written_data: u32,
+    scratch: impl AsRef<[u8]>,
+    mut store: StoreContext,
+) -> (S, P)
+where
+    S: Archive,
+    <S as Archive>::Archived: Deserialize<S, StoreContext>,
+    P: Archive,
+    <P as Archive>::Archived: Deserialize<P, StoreContext>,
+{
+    use rkyv::archived_root;
+
+    let state = unsafe { archived_root::<S>(&scratch.as_ref()[..written_state as usize]) };
+    let state: S = state.deserialize(&mut store).unwrap();
+    let arg = unsafe {
+        archived_root::<P>(&scratch.as_ref()[written_state as usize..written_data as usize])
+    };
+    let arg: P = arg.deserialize(&mut store).unwrap();
+
+    (state, arg)
+}
+
+pub fn q_return<R>(ret: &R, store: StoreContext) -> u32
+where
+    R: Archive + Serialize<StoreSerializer<OffsetLen>>,
+{
+    let mut ser = store.serializer();
+    let buffer_len =
+        ser.serialize_value(ret).unwrap() + core::mem::size_of::<<R as Archive>::Archived>();
+    buffer_len as u32
+}

@@ -1,0 +1,16 @@
+[package]
+name = "primitives"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+microkelvin = { version = "0.16.0-rkyv", default-features = false }
+rkyv = { version = "0.7.29", default-features = false, features = ["alloc", "validation"] }
+bytecheck = { version = "0.6", default-features = false }
+wee_alloc = "0.4"
+
+[features]
+default = ["host"]
+host = []
